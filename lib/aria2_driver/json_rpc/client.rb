@@ -16,15 +16,15 @@ module Aria2Driver
       def initialize(host, options = {})
         @id = options[:id] || generate_uuid
         @token = options[:token]
-        options.delete :id
-        options.delete :token
+        options.delete(:id)
+        options.delete(:token)
         @connection = Aria2Driver::JsonRpc::Connection.new host, options
       end
 
       def request(request)
         req_hash = request_to_hash(request)
         http = Net::HTTP.new(connection.host, connection.port)
-        http.use_ssl = true if connection.scheme == 'https'
+        http.use_ssl = true if connection.secure
         begin
           http_response = http.request_post(
             request.path,
@@ -45,9 +45,9 @@ module Aria2Driver
 
         rpc_method = snake_lower_camel(method.to_s)
         if args.any?
-          request Aria2Driver::JsonRpc::Request.new("aria2.#{rpc_method}", args[0])
+          request(Aria2Driver::JsonRpc::Request.new("aria2.#{rpc_method}", args[0]))
         else
-          request Aria2Driver::JsonRpc::Request.new("aria2.#{rpc_method}")
+          request(Aria2Driver::JsonRpc::Request.new("aria2.#{rpc_method}"))
         end
       end
 
@@ -60,7 +60,7 @@ module Aria2Driver
       def supported_request?(request)
         %i[
           get_version
-          add_uri
+          add_uri add_torrent
           remove force_remove
           remove_download_result purge_download_result
           tell_status

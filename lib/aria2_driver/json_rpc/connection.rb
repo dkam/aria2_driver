@@ -9,7 +9,7 @@ module Aria2Driver
         port: 80
       }.freeze
 
-      attr_reader :scheme, :port, :host
+      attr_reader :scheme, :port, :host, :secure
 
       def initialize(host, options = {})
         @host = host
@@ -21,6 +21,7 @@ module Aria2Driver
       def check_defaults(options)
         @scheme = options.fetch(:scheme, DEFAULTS[:scheme])
         @port = options.fetch(:port, DEFAULTS[:port])
+        @secure = options.fetch(:secure, port == ::Net::HTTP.https_default_port)
       end
     end
   end
