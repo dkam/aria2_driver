@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/http'
 require 'json'
 
@@ -10,7 +12,7 @@ module Aria2Driver
 
       attr_reader :rpc_method, :params, :path
 
-      def initialize(rpc_method, options={})
+      def initialize(rpc_method, options = {})
         @path = options[:path] || DEFAULT_PATH
         @rpc_method = rpc_method
         @params = options[:params] || []
@@ -18,9 +20,9 @@ module Aria2Driver
 
       def to_hash
         {
-            jsonrpc: JSON_RPC_VERSION,
-            method: rpc_method,
-            params: params
+          jsonrpc: JSON_RPC_VERSION,
+          method: rpc_method,
+          params: params
         }
       end
     end

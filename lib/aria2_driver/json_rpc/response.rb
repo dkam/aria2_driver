@@ -1,9 +1,12 @@
+# frozen_string_literal: true
+
 require 'aria2_driver/json_rpc/error'
 
 module Aria2Driver
   module JsonRpc
     class Response
-      attr_reader :jsonrpc, :id, :result, :error
+      attr_accessor :result
+      attr_reader :jsonrpc, :id, :error
 
       def initialize(response_hash)
         @jsonrpc = response_hash['jsonrpc']
@@ -17,12 +20,8 @@ module Aria2Driver
 
       private
 
-      def result=(result_payload)
-        @result = result_payload
-      end
-
       def error=(error_payload)
-        @error = Aria2Driver::JsonRpc::Error.new error_payload
+        @error = Aria2Driver::JsonRpc::Error.new(error_payload)
       end
 
       def detect_payload(response_hash)

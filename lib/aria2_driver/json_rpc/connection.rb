@@ -1,16 +1,17 @@
+# frozen_string_literal: true
 
 module Aria2Driver
   module JsonRpc
     class Connection
 
       DEFAULTS = {
-          scheme: 'http',
-          port: 80
-      }
+        scheme: 'http',
+        port: 80
+      }.freeze
 
       attr_reader :scheme, :port, :host
 
-      def initialize(host, options={})
+      def initialize(host, options = {})
         @host = host
         check_defaults(options)
       end
@@ -21,7 +22,6 @@ module Aria2Driver
         @scheme = options.fetch(:scheme, DEFAULTS[:scheme])
         @port = options.fetch(:port, DEFAULTS[:port])
       end
-
     end
   end
 end
