@@ -10,7 +10,6 @@ require 'aria2_driver/json_rpc/response_exception'
 module Aria2Driver
   module JsonRpc
     class Client
-
       attr_reader :id, :connection, :token
 
       def initialize(host, options = {})
@@ -22,19 +21,13 @@ module Aria2Driver
       end
 
       def request(request)
-        req_hash = request_to_hash(request)
-        http = Net::HTTP.new(connection.host, connection.port)
-        http.use_ssl = true if connection.secure
-        begin
-          http_response = http.request_post(
+        Net::HTTP.start(connection.host, connection.port, use_ssl: connection.secure) do |http|
+          response = http.request_post(
             request.path,
-            JSON.generate(req_hash),
-            {
-              'Accept' => 'application/json',
-              'Content-Type' => 'application/json'
-            }
+            JSON.generate(request_to_hash(request)),
+            'Accept' => 'application/json', 'Content-Type' => 'application/json'
           )
-          Aria2Driver::JsonRpc::Response.new(JSON.parse(http_response.body))
+          Aria2Driver::JsonRpc::Response.new(JSON.parse(response.body))
         rescue StandardError => e
           raise Aria2Driver::JsonRpc::ResponseException, e.message
         end
