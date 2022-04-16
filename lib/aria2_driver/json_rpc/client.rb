@@ -57,9 +57,12 @@ module Aria2Driver
           remove force_remove
           remove_download_result purge_download_result
           tell_status
-          pause force_pause
+          pause force_pause unpause
+          pause_all unpause_all
           get_files get_uris
           get_global_stat
+          get_peers get_servers
+          tell_active tell_waiting tell_stopped
         ].include?(request)
       end
 
